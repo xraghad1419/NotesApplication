@@ -9,27 +9,17 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: |
-    sudo apt-get update
-    sudo apt-get install -y openjdk-11-jdk
-  displayName: 'Install Java 11'
-
-- script: |
-    ls -l gradlew
-    chmod +x gradlew
-  displayName: 'Verify Gradle Wrapper'
-
 - task: Gradle@2
   inputs:
     workingDirectory: ''
     gradleWrapperFile: 'gradlew'
     gradleOptions: '-Xmx3072m'
-    javaHomeOption: 'Path'
-    jdkVersionOption: '1.11'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '11'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
-    tasks: 'build --info'  # Adding --info for detailed logs
+    tasks: 'build --info'
 
 - task: PublishBuildArtifacts@1
   inputs:
