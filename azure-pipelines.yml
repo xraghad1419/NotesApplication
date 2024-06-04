@@ -9,9 +9,24 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- script: |
+    sudo apt-get update
+    sudo apt-get install -y openjdk-11-jdk
+  displayName: 'Install Java 11'
+
+- script: |
+    ls -l gradlew
+    chmod +x gradlew
+  displayName: 'Verify Gradle Wrapper'
+
+- script: |
+    printenv
+    ls -R
+  displayName: 'Print Environment Variables and Directory Structure'
+
 - task: Gradle@2
   inputs:
-    workingDirectory: ''
+    workingDirectory: ''  # Ensure this is the correct directory where your gradlew file is located
     gradleWrapperFile: 'gradlew'
     gradleOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
@@ -20,6 +35,10 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
     tasks: 'build --info'
+
+- script: |
+    cat $(System.DefaultWorkingDirectory)/build/reports/tests/test/index.html
+  displayName: 'Display Test Report'
 
 - task: PublishBuildArtifacts@1
   inputs:
